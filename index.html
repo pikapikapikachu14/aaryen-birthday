@@ -9,8 +9,22 @@
       text-align: center;
       background: #fff8e7;
       overflow: hidden;
-    }
+      .confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  top: -10px;
+  animation: fall 3s linear infinite;
+}
 
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}   
+ </style>
+  
     .page {
       display: none;
       height: 100vh;
@@ -62,6 +76,7 @@
 
 <body>
 
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>  
 <div class="pikachu" style="top:10%; left:10%;">⚡</div>
 <div class="pikachu" style="top:70%; left:80%;">⚡</div>
 
@@ -74,7 +89,7 @@
 
 <!-- PAGE 2 -->
 <div id="page2" class="page">
-  <div class="cake">🎂</div>
+  <div class="cake" id="cake">🎂🕯️🕯️🕯️</div>
   <h2>today is yours.</h2>
   <p>so everything else can wait… just for a bit</p>
   <button onclick="blowCandles()">blow candles 🎂</button>
@@ -128,20 +143,63 @@
     (in more ways than one)
   </p>
 
-  <button onclick="playSong()">play something 🎶</button>
+  <button onclick="playSong()">press this pikachu ⚡</button>
 </div>
 
 <script>
   function nextPage(num) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page' + num).classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + num).classList.add('active');
+
+  if (num === 6) {
+    launchConfetti();
   }
+}
 
   function blowCandles() {
     document.querySelector('.cake').innerText = "🎂✨";
     setTimeout(() => nextPage(3), 1000);
   }
 
+  function launchConfetti() {
+  for (let i = 0; i < 40; i++) {
+    let confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.backgroundColor =
+      ["#ffcc00", "#ff69b4", "#00cfff", "#aaff00"][Math.floor(Math.random() * 4)];
+
+    confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+
+    document.body.appendChild(confetti);
+
+    setTimeout(() => confetti.remove(), 3000);
+  }
+}
+  
+  function launchConfetti() {
+  for (let i = 0; i < 40; i++) {
+    let confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.backgroundColor =
+      ["#ffcc00", "#ff69b4", "#00cfff", "#aaff00"][Math.floor(Math.random() * 4)];
+
+    confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+
+    document.body.appendChild(confetti);
+
+    setTimeout(() => confetti.remove(), 3000);
+  }
+}
+  
+  function playSong() {
+  const music = document.getElementById("bgMusic");
+  music.play();
+}
+  
   let clicks = 0;
 
   const outputs = [
