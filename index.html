@@ -479,7 +479,7 @@ function boot() {
   attachCursorHover();
 
   /* ── Music ──────────────────────────────────────────────────────────── */
-  audEl.volume = 0;
+  audEl.volume = 0.6;
 
   function fadeVol(target, ms) {
     var origin = audEl.volume;
@@ -492,13 +492,13 @@ function boot() {
   }
 
   function startMusic() {
-    if (musicOn) return;
-    audEl.play().then(function () {
-      musicOn = true;
-      mbtnEl.classList.add('playing');
-      fadeVol(0.42, 2200);
-    }).catch(function () { /* browser blocked — user must click first */ });
-  }
+  if (musicOn) return;
+  audEl.play().then(function () {
+    musicOn = true;
+    mbtnEl.classList.add('playing');
+    audEl.volume = 0.6;
+  }).catch(function () { });
+}
 
   function toggleMusic() {
     if (musicOn) {
