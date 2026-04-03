@@ -37,16 +37,68 @@
 
     h2, p {
       max-width: 500px;
+      white-space: pre-line;
     }
 
-    .cake {
-      font-size: 80px;
+    /* 🎂 CAKE */
+    .cake-box {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
     }
 
+    .cake-base {
+      width: 100%;
+      height: 60px;
+      background: pink;
+      border-radius: 10px;
+      position: absolute;
+      bottom: 0;
+    }
+
+    .candle {
+      width: 8px;
+      height: 30px;
+      background: #fff;
+      position: absolute;
+      top: 10px;
+    }
+
+    .candle::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: orange;
+      border-radius: 50%;
+      position: absolute;
+      top: -10px;
+      left: 0;
+    }
+
+    .candle:nth-child(2) { left: 20px; }
+    .candle:nth-child(3) { left: 50px; }
+    .candle:nth-child(4) { left: 80px; }
+
+    /* 🌸 */
     .orchid {
       font-size: 60px;
     }
 
+    /* 💖 FLOATING HEARTS */
+    .heart {
+      position: fixed;
+      color: #ff4d6d;
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(100vh); opacity: 1; }
+      to { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    /* ⚡ */
     .pikachu {
       position: absolute;
       font-size: 40px;
@@ -59,11 +111,10 @@
       100% { transform: translateY(0px); }
     }
 
-    /* ✅ CONFETTI (correct place now) */
+    /* 💖 CONFETTI */
     .confetti {
       position: fixed;
-      width: 10px;
-      height: 10px;
+      font-size: 12px;
       top: -10px;
       animation: fall 3s linear infinite;
     }
@@ -78,8 +129,12 @@
 
 <body>
 
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+<!-- 🎵 MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_9c0c5f2c1b.mp3" type="audio/mp3">
+</audio>
 
+<!-- ⚡ -->
 <div class="pikachu" style="top:10%; left:10%;">⚡</div>
 <div class="pikachu" style="top:70%; left:80%;">⚡</div>
 
@@ -92,7 +147,13 @@
 
 <!-- PAGE 2 -->
 <div id="page2" class="page">
-  <div class="cake" id="cake">🎂🕯️🕯️🕯️</div>
+  <div class="cake-box">
+    <div class="cake-base"></div>
+    <div class="candle"></div>
+    <div class="candle"></div>
+    <div class="candle"></div>
+  </div>
+
   <h2>today is yours.</h2>
   <p>so everything else can wait… just for a bit</p>
   <button onclick="blowCandles()">blow candles 🎂</button>
@@ -102,12 +163,15 @@
 <div id="page3" class="page">
   <div class="orchid">🌸🌸🌸</div>
   <p>
-    i thought about what would suit you<br><br>
-    not loud<br>
-    not obvious<br><br>
-    something a little rare<br>
-    quietly precise<br><br>
-    so… orchids
+i thought about what would suit you
+
+not loud  
+not obvious  
+
+something a little rare  
+quietly precise  
+
+so… orchids
   </p>
   <button onclick="nextPage(4)">ok continue</button>
 </div>
@@ -127,85 +191,136 @@
 <div id="page5" class="page">
   <h2>after repeated trials…</h2>
   <p>
-    variance reduces<br>
-    estimate stabilises<br><br>
-    result:<br>
-    unchanged
+variance reduces  
+estimate stabilises  
+
+result:  
+unchanged
   </p>
+
+  <p style="opacity:0.6;">
+    time feels different with you  
+    (not saying why)
+  </p>
+
   <button onclick="nextPage(6)">continue</button>
 </div>
 
 <!-- FINAL PAGE -->
 <div id="page6" class="page">
   <h1>Happy Birthday, Aaryen ⚡</h1>
-  <p>
-    i hope this year feels a little softer<br>
-    a little kinder<br>
-    and still very you<br><br>
-    i really like having you in my life<br>
-    (in more ways than one)
-  </p>
+  <p id="finalText"></p>
 
   <button onclick="playSong()">press this pikachu ⚡</button>
 </div>
 
 <script>
-  function nextPage(num) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page' + num).classList.add('active');
+let musicStarted = false;
 
-    if (num === 6) {
-      launchConfetti();
+/* 💖 HEARTS BACKGROUND */
+setInterval(() => {
+  let heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerText = "❤";
+
+  heart.style.left = Math.random() * 100 + "vw";
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 6000);
+}, 500);
+
+/* PAGE NAV */
+function nextPage(num) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + num).classList.add('active');
+
+  if (!musicStarted) {
+    document.getElementById("bgMusic").play();
+    musicStarted = true;
+  }
+
+  if (num === 6) {
+    launchConfetti();
+
+    const text = `i hope this year feels a little softer
+and a little kinder
+and still very you
+
+i really like having you in my life
+(in more ways than one)`;
+
+    typeText(document.getElementById("finalText"), text, 35);
+  }
+}
+
+/* ⌨️ TYPING */
+function typeText(element, text, speed = 40) {
+  element.innerHTML = "";
+  let i = 0;
+
+  function typing() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
     }
   }
 
-  function blowCandles() {
-    document.getElementById("cake").innerText = "🎂✨";
-    setTimeout(() => nextPage(3), 1000);
+  typing();
+}
+
+/* 🎂 */
+function blowCandles() {
+  document.querySelectorAll(".candle").forEach(c => {
+    c.style.opacity = "0.2";
+  });
+
+  setTimeout(() => nextPage(3), 1200);
+}
+
+/* 💖 CONFETTI */
+function launchConfetti() {
+  for (let i = 0; i < 40; i++) {
+    let confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.innerText = "❤";
+
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+
+    document.body.appendChild(confetti);
+
+    setTimeout(() => confetti.remove(), 3000);
   }
+}
 
-  function launchConfetti() {
-    for (let i = 0; i < 40; i++) {
-      let confetti = document.createElement("div");
-      confetti.classList.add("confetti");
+/* 🎵 */
+function playSong() {
+  document.getElementById("bgMusic").play();
+}
 
-      confetti.style.left = Math.random() * 100 + "vw";
-      confetti.style.backgroundColor =
-        ["#ffcc00", "#ff69b4", "#00cfff", "#aaff00"][Math.floor(Math.random() * 4)];
+/* 🧠 SIMULATION */
+let clicks = 0;
 
-      confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+const outputs = [
+  "outcome: inconclusive\nsignal persists",
+  "variance observed\nnot sufficient to exit",
+  "path unclear\ndirection consistent",
+  "uncertainty present\nstill retained",
+  "no clear model\nstill choosing this",
+  "model compromised\nexternal influence detected"
+];
 
-      document.body.appendChild(confetti);
+function runSim() {
+  const random = outputs[Math.floor(Math.random() * outputs.length)];
+  document.getElementById("output").innerText = random;
 
-      setTimeout(() => confetti.remove(), 3000);
-    }
+  clicks++;
+  if (clicks >= 4) {
+    document.getElementById("finalBtn").style.display = "inline-block";
   }
-
-  function playSong() {
-    const music = document.getElementById("bgMusic");
-    music.play();
-  }
-
-  let clicks = 0;
-
-  const outputs = [
-    "outcome: inconclusive\nsignal persists",
-    "variance observed\nnot sufficient to exit",
-    "path unclear\ndirection consistent",
-    "uncertainty present\nstill retained",
-    "no clear model\nstill choosing this",
-    "model compromised\nexternal influence detected"
-  ];
-
-  function runSim() {
-    const random = outputs[Math.floor(Math.random() * outputs.length)];
-    document.getElementById("output").innerText = random;
-
-    clicks++;
-    if (clicks >= 4) {
-      document.getElementById("finalBtn").style.display = "inline-block";
-    }
-  }
+}
 </script>
 
 </body>
