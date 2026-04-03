@@ -95,13 +95,23 @@ html, body {
   justify-content: center;
   text-align: center;
   padding: clamp(24px,5vw,60px);
-  pointer-events: none;
-  opacity: 0;
   width: 100%;
   max-width: 700px;
+
+  opacity: 0;              
+  pointer-events: none;    
 }
-.sc.in  { animation: scIn  .9s cubic-bezier(.16,1,.3,1) forwards; pointer-events: all; }
-.sc.out { animation: scOut .55s cubic-bezier(.4,0,1,1)  forwards; pointer-events: none; }
+.sc.in {
+  animation: scIn .9s cubic-bezier(.16,1,.3,1) forwards;
+  pointer-events: all;
+  opacity: 1;
+}
+
+.sc.out {
+  animation: scOut .55s cubic-bezier(.4,0,1,1) forwards;
+  pointer-events: none;
+  opacity: 0;
+}
 
 @keyframes scIn  { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
 @keyframes scOut { from { opacity:1; transform:translateY(0); }   to { opacity:0; transform:translateY(-18px); } }
@@ -513,34 +523,34 @@ function boot() {
 
   /* ── Scene navigation ───────────────────────────────────────────────── */
   function goTo(n) {
-    if (transitioning) return;
-    if (n < 1 || n > 8) return;
-    transitioning = true;
+  if (transitioning) return;
+  transitioning = true;
 
-    startMusic();
+  startMusic();
 
-    var prevEl = document.getElementById('s' + currentScene);
-    prevEl.classList.remove('in');
-    prevEl.classList.add('out');
+  const allScenes = document.querySelectorAll('.sc');
 
-    setTimeout(function () {
-      /* clean up prev */
-      prevEl.classList.remove('out');
-      prevEl.style.opacity = '0';
+  allScenes.forEach(sc => {
+    sc.classList.remove('in');
+    sc.classList.remove('out');
+    sc.style.opacity = "0";
+  });
 
-      currentScene = n;
-      updateDots();
-      onSceneEnter(n);
+  currentScene = n;
+  updateDots();
+  onSceneEnter(n);
 
-      var nextEl = document.getElementById('s' + n);
-      nextEl.classList.remove('out');
-      /* force reflow so animation re-triggers */
-      void nextEl.offsetWidth;
-      nextEl.classList.add('in');
+  const nextEl = document.getElementById('s' + n);
 
-      transitioning = false;
-    }, 580);
-  }
+  // force reflow
+  void nextEl.offsetWidth;
+
+  nextEl.classList.add('in');
+
+  setTimeout(() => {
+    transitioning = false;
+  }, 600);
+}
 
   function updateDots() {
     for (var i = 1; i <= 8; i++) {
