@@ -1,323 +1,1055 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>For Aaryen</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Aaryen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@300;400&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
-      color: white;
-      overflow: hidden;
-    }
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    .page {
-      display: none;
-      height: 100vh;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      padding: 20px;
-    }
+  body {
+    background: #000;
+    overflow: hidden;
+    font-family: 'Cormorant Garamond', serif;
+    color: #fff;
+    cursor: none;
+  }
 
-    .active {
-      display: flex;
-    }
+  #canvas-container {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
 
-    button {
-      padding: 12px 26px;
-      border: none;
-      background: #ff6b81;
-      color: white;
-      border-radius: 30px;
-      cursor: pointer;
-      margin-top: 20px;
-      font-size: 15px;
-      box-shadow: 0 0 20px rgba(255,107,129,0.6);
-    }
+  canvas { display: block; }
 
-    h2, p {
-      max-width: 520px;
-      white-space: pre-line;
-    }
+  /* CUSTOM CURSOR */
+  #cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: rgba(255,150,170,0.9);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    box-shadow: 0 0 12px rgba(255,107,129,0.8);
+  }
+  #cursor.hovering {
+    width: 30px;
+    height: 30px;
+    background: rgba(255,107,129,0.3);
+    box-shadow: 0 0 25px rgba(255,107,129,1);
+  }
 
-    /* 💖 NEON HEARTS */
-    .heart {
-      position: fixed;
-      color: #ff8fab;
-      font-size: 18px;
-      text-shadow: 0 0 8px #ff8fab, 0 0 20px #ff4d6d;
-      animation: floatUp 6s linear infinite, flicker 2s infinite;
-    }
+  /* UI OVERLAY */
+  #ui {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
 
-    @keyframes floatUp {
-      from { transform: translateY(100vh); opacity: 1; }
-      to { transform: translateY(-10vh); opacity: 0; }
-    }
+  .scene-content {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    pointer-events: none;
+    animation: sceneIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 
-    @keyframes flicker {
-      0%,100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
+  .scene-content.active {
+    display: flex;
+    pointer-events: all;
+  }
 
-    /* 🎂 CAKE */
-    .cake {
-      width: 140px;
-      height: 90px;
-      background: linear-gradient(145deg, #ff9eb5, #ff6b81);
-      border-radius: 14px;
-      position: relative;
-      margin-bottom: 20px;
-      box-shadow: 0 0 30px rgba(255,107,129,0.6);
-      animation: bounce 2s infinite ease-in-out;
-    }
+  @keyframes sceneIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-    @keyframes bounce {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
+  @keyframes sceneOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+  }
 
-    .candle {
-      width: 6px;
-      height: 30px;
-      background: white;
-      position: absolute;
-      top: -30px;
-    }
+  .scene-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(13px, 2vw, 16px);
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(255,180,195,0.6);
+    margin-bottom: 16px;
+  }
 
-    .candle:nth-child(1){ left:35px; }
-    .candle:nth-child(2){ left:65px; }
-    .candle:nth-child(3){ left:95px; }
+  .scene-text {
+    font-size: clamp(18px, 3.5vw, 28px);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 580px;
+    color: rgba(255,240,245,0.95);
+    white-space: pre-line;
+    text-shadow: 0 0 40px rgba(255,107,129,0.3);
+  }
 
-    .flame {
-      width: 8px;
-      height: 8px;
-      background: orange;
-      border-radius: 50%;
-      position: absolute;
-      top: -8px;
-      left: -1px;
-      animation: flicker 0.3s infinite;
-    }
+  .scene-text em {
+    font-style: italic;
+    color: rgba(255,180,195,0.85);
+  }
 
-    /* 🌸 FLOWERS */
-    .flowers img {
-      width: 220px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(255,255,255,0.15);
-    }
+  .scene-text.large {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
 
-    /* 🎉 CONFETTI */
-    .confetti {
-      position: fixed;
-      width: 8px;
-      height: 8px;
-      animation: fall 3s linear infinite;
-    }
+  .sub-text {
+    font-size: clamp(13px, 2vw, 16px);
+    font-weight: 300;
+    color: rgba(255,200,210,0.5);
+    letter-spacing: 0.15em;
+    margin-top: 8px;
+  }
 
-    @keyframes fall {
-      to { transform: translateY(100vh); }
-    }
+  /* BUTTON */
+  .btn {
+    margin-top: 36px;
+    padding: 14px 38px;
+    background: transparent;
+    border: 1px solid rgba(255,107,129,0.5);
+    color: rgba(255,180,195,0.9);
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    border-radius: 0;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s, border-color 0.3s;
+    pointer-events: all;
+  }
 
-    /* ❤️ DRAMATIC TEXT */
-    .bigLove {
-      font-size: 32px;
-      font-weight: bold;
-      margin-top: 20px;
-      opacity: 0;
-      animation: fadeIn 2s forwards;
-    }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,107,129,0.12);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-  </style>
+  .btn:hover::before { transform: scaleX(1); }
+  .btn:hover { border-color: rgba(255,107,129,0.9); color: #fff; }
+
+  .btn span { position: relative; z-index: 1; }
+
+  /* BLOW INSTRUCTION */
+  #blow-hint {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: rgba(255,180,195,0.4);
+    margin-top: 12px;
+    text-transform: uppercase;
+  }
+
+  /* TYPED TEXT */
+  #typed-final {
+    white-space: pre-line;
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 300;
+    line-height: 2;
+    color: rgba(255,230,235,0.8);
+    min-height: 120px;
+    text-align: center;
+    max-width: 500px;
+  }
+
+  /* PROGRESS DOTS */
+  #progress {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 20;
+  }
+
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255,107,129,0.25);
+    transition: all 0.4s;
+  }
+
+  .dot.active {
+    background: rgba(255,107,129,0.9);
+    box-shadow: 0 0 8px rgba(255,107,129,0.6);
+    transform: scale(1.5);
+  }
+
+  /* VIGNETTE */
+  #vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* LOADING */
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 20px;
+    transition: opacity 1s;
+  }
+
+  #loading-text {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: rgba(255,150,170,0.5);
+    text-transform: uppercase;
+  }
+
+  .load-bar {
+    width: 120px;
+    height: 1px;
+    background: rgba(255,107,129,0.2);
+    overflow: hidden;
+  }
+
+  .load-fill {
+    height: 100%;
+    background: rgba(255,107,129,0.8);
+    animation: loadUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes loadUp {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  /* MUSIC TOGGLE */
+  #music-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100;
+    background: transparent;
+    border: 1px solid rgba(255,107,129,0.3);
+    color: rgba(255,180,195,0.5);
+    font-size: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  #music-btn:hover {
+    border-color: rgba(255,107,129,0.8);
+    color: rgba(255,150,170,0.9);
+    box-shadow: 0 0 15px rgba(255,107,129,0.3);
+  }
+</style>
 </head>
-
 <body>
 
-<audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/11/17/audio_6358b4d2f2.mp3">
-</audio>
-
-<!-- PAGE 1 -->
-<div id="page1" class="page active">
-  <h2>Initializing birthday protocol…</h2>
-  <p>Subject detected: Aaryen</p>
-  <button onclick="nextPage(2)">Begin</button>
+<div id="loading">
+  <div id="loading-text">loading</div>
+  <div class="load-bar"><div class="load-fill"></div></div>
 </div>
 
-<!-- PAGE 2 -->
-<div id="page2" class="page">
-  <div class="cake">
-    <div class="candle"><div class="flame"></div></div>
-    <div class="candle"><div class="flame"></div></div>
-    <div class="candle"><div class="flame"></div></div>
-  </div>
+<div id="cursor"></div>
+<div id="canvas-container"></div>
+<div id="vignette"></div>
 
-  <h2>today is yours</h2>
-  <p>everything else can wait for a moment</p>
-  <button onclick="blowCandles()">blow candles</button>
+<div id="progress">
+  <div class="dot active" id="d1"></div>
+  <div class="dot" id="d2"></div>
+  <div class="dot" id="d3"></div>
+  <div class="dot" id="d4"></div>
+  <div class="dot" id="d5"></div>
+  <div class="dot" id="d6"></div>
+  <div class="dot" id="d7"></div>
+  <div class="dot" id="d8"></div>
 </div>
 
-<!-- PAGE 3 -->
-<div id="page3" class="page">
-  <div class="flowers">
-    <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df">
+<div id="ui">
+
+  <!-- PAGE 1 -->
+  <div class="scene-content active" id="scene1">
+    <div class="scene-title">system boot</div>
+    <div class="scene-text large">Initializing birthday protocol…</div>
+    <div class="sub-text">Subject detected: Aaryen</div>
+    <button class="btn" id="btn-begin" onclick="goToScene(2)"><span>Begin</span></button>
   </div>
 
-  <p>
-not loud  
+  <!-- PAGE 2 -->
+  <div class="scene-content" id="scene2">
+    <div class="scene-text large">today is yours</div>
+    <div class="sub-text" style="margin-top:10px;font-size:14px;letter-spacing:0.2em">everything else can wait for a moment</div>
+    <button class="btn" id="btn-blow" onclick="triggerBlow()"><span>blow candles</span></button>
+    <div id="blow-hint">or press space</div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="scene-content" id="scene3">
+    <div class="scene-text" style="white-space:pre-line">not loud  
 not obvious  
 
 something softer  
 a little rare  
 
-felt like you
-  </p>
+felt like you</div>
+    <button class="btn" onclick="goToScene(4)"><span>continue</span></button>
+  </div>
 
-  <button onclick="nextPage(4)">continue</button>
-</div>
-
-<!-- PAGE 4 -->
-<div id="page4" class="page">
-  <p>
-I tried to make this clever
+  <!-- PAGE 4 -->
+  <div class="scene-content" id="scene4">
+    <div class="scene-text">I tried to make this clever
 
 something you'd analyse  
 something structured  
 
-but that’s not really the point
-  </p>
+but that's not really the point</div>
+    <button class="btn" onclick="goToScene(5)"><span>continue</span></button>
+  </div>
 
-  <button onclick="nextPage(5)">continue</button>
-</div>
-
-<!-- PAGE 5 -->
-<div id="page5" class="page">
-  <p>
-the point is just this:
+  <!-- PAGE 5 -->
+  <div class="scene-content" id="scene5">
+    <div class="scene-text">the point is just this:
 
 I am very, very in love with you
 
 not vaguely  
 not temporarily  
 
-in a this-is-real-for-me way
-  </p>
+in a <em>this-is-real-for-me</em> way</div>
+    <button class="btn" onclick="goToScene(6)"><span>continue</span></button>
+  </div>
 
-  <button onclick="nextPage(6)">continue</button>
-</div>
-
-<!-- PAGE 6 -->
-<div id="page6" class="page">
-  <p>
-Subscription: Aaryen  
+  <!-- PAGE 6 -->
+  <div class="scene-content" id="scene6">
+    <div class="scene-text" style="font-size:clamp(15px,2.5vw,22px);line-height:2.2">Subscription: Aaryen  
 Status: renewed  
 
 Term: for life  
 
 and… if it were up to me  
 
-even after
-  </p>
+even after</div>
+    <button class="btn" onclick="goToScene(7)"><span>continue</span></button>
+  </div>
 
-  <button onclick="nextPage(7)">continue</button>
-</div>
-
-<!-- PAGE 7 -->
-<div id="page7" class="page">
-  <p>
-you make time feel different  
+  <!-- PAGE 7 -->
+  <div class="scene-content" id="scene7">
+    <div class="scene-text">you make time feel different  
 
 slower  
 softer  
 
-(not saying why)
-  </p>
+(not saying why)</div>
+    <button class="btn" onclick="goToScene(8)"><span>continue</span></button>
+  </div>
 
-  <button onclick="nextPage(8)">continue</button>
+  <!-- PAGE 8 FINAL -->
+  <div class="scene-content" id="scene8">
+    <div class="scene-text large" style="font-family:'Cinzel',serif;letter-spacing:0.05em;margin-bottom:16px">Happy Birthday, Aaryen</div>
+    <div id="typed-final"></div>
+    <div class="scene-text" style="font-size:clamp(22px,4vw,38px);margin-top:30px;opacity:0;transition:opacity 3s 4s" id="love-line">I love you.</div>
+  </div>
+
 </div>
 
-<!-- FINAL -->
-<div id="page8" class="page">
-  <h1>Happy Birthday, Aaryen</h1>
-  <p id="finalText"></p>
-  <div class="bigLove">I love you.</div>
-</div>
+<button id="music-btn" onclick="toggleMusic()">♪</button>
+
+<audio id="bgMusic" loop preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_5f9f4c06fa.mp3" type="audio/mpeg">
+</audio>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 
 <script>
-let musicStarted = false;
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentScene = 1;
+let candlesBlown = false;
+let musicPlaying = false;
+let mouseX = 0, mouseY = 0;
 
-/* 💖 HEARTS */
-setInterval(() => {
-  let heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerText = "❤";
-  heart.style.left = Math.random()*100 + "vw";
-  document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(),6000);
-},400);
+// ─── CURSOR ──────────────────────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('button, .btn').forEach(b => {
+  b.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+  b.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+});
 
-/* NAV */
-function nextPage(num){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page'+num).classList.add('active');
+// ─── MUSIC ───────────────────────────────────────────────────────────────────
+const music = document.getElementById('bgMusic');
+music.volume = 0;
 
-  if(!musicStarted){
-    document.getElementById("bgMusic").play();
-    musicStarted=true;
-  }
+function startMusic() {
+  if (musicPlaying) return;
+  music.play().then(() => {
+    musicPlaying = true;
+    document.getElementById('music-btn').style.color = 'rgba(255,150,170,0.9)';
+    fadeMusicIn();
+  }).catch(() => {});
+}
 
-  if(num===8){
-    launchConfetti();
+function fadeMusicIn() {
+  let v = 0;
+  const t = setInterval(() => {
+    v = Math.min(v + 0.01, 0.45);
+    music.volume = v;
+    if (v >= 0.45) clearInterval(t);
+  }, 100);
+}
 
-    const text = `i hope this year feels softer
-and kinder
-
-and still very you
-
-i'm really glad i get to love you`;
-
-    typeText(document.getElementById("finalText"),text,30);
+function toggleMusic() {
+  if (musicPlaying) {
+    music.pause();
+    musicPlaying = false;
+    document.getElementById('music-btn').style.color = 'rgba(255,180,195,0.3)';
+  } else {
+    music.play();
+    musicPlaying = true;
+    fadeMusicIn();
+    document.getElementById('music-btn').style.color = 'rgba(255,150,170,0.9)';
   }
 }
 
-/* ⌨️ */
-function typeText(el,text,speed){
-  el.innerHTML="";
-  let i=0;
-  function t(){
-    if(i<text.length){
-      el.innerHTML+=text[i++];
-      setTimeout(t,speed);
+// Space bar to blow candles
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && currentScene === 2) { e.preventDefault(); triggerBlow(); }
+});
+
+// ─── SCENE NAVIGATION ────────────────────────────────────────────────────────
+function goToScene(n) {
+  startMusic();
+  const prev = document.getElementById('scene' + currentScene);
+  prev.style.animation = 'sceneOut 0.6s cubic-bezier(0.16,1,0.3,1) forwards';
+  setTimeout(() => {
+    prev.classList.remove('active');
+    prev.style.animation = '';
+    currentScene = n;
+    const next = document.getElementById('scene' + n);
+    next.classList.add('active');
+    next.style.animation = 'sceneIn 1.2s cubic-bezier(0.16,1,0.3,1) forwards';
+    updateDots();
+    transitionBackground(n);
+    if (n === 8) initFinalScene();
+  }, 600);
+}
+
+function updateDots() {
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i + 1 === currentScene);
+  });
+}
+
+// ─── BLOW CANDLES ────────────────────────────────────────────────────────────
+function triggerBlow() {
+  if (candlesBlown) return;
+  candlesBlown = true;
+  blowCandlesThree();
+  setTimeout(() => goToScene(3), 1800);
+}
+
+// ─── FINAL SCENE ─────────────────────────────────────────────────────────────
+function initFinalScene() {
+  launchConfettiThree();
+  const text = `i hope this year feels softer\nand kinder\n\nand still very you\n\ni'm really glad i get to love you`;
+  typeText(document.getElementById('typed-final'), text, 38, () => {
+    setTimeout(() => {
+      document.getElementById('love-line').style.opacity = '1';
+    }, 500);
+  });
+  // boost music
+  let v = music.volume;
+  const t = setInterval(() => {
+    v = Math.min(v + 0.005, 0.7);
+    music.volume = v;
+    if (v >= 0.7) clearInterval(t);
+  }, 100);
+}
+
+function typeText(el, text, speed, cb) {
+  el.innerHTML = '';
+  let i = 0;
+  function tick() {
+    if (i < text.length) {
+      el.innerHTML += text[i++] === '\n' ? '<br>' : text[i - 1];
+      setTimeout(tick, speed);
+    } else if (cb) cb();
+  }
+  tick();
+}
+
+// ─── THREE.JS SETUP ──────────────────────────────────────────────────────────
+const container = document.getElementById('canvas-container');
+const W = window.innerWidth, H = window.innerHeight;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000005, 0.035);
+
+const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 100);
+camera.position.set(0, 1.5, 7);
+camera.lookAt(0, 0, 0);
+
+// Resize
+window.addEventListener('resize', () => {
+  const w = window.innerWidth, h = window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+
+// ─── ENVIRONMENT LIGHTING ─────────────────────────────────────────────────────
+const ambientLight = new THREE.AmbientLight(0x0a0008, 0.8);
+scene.add(ambientLight);
+
+const keyLight = new THREE.DirectionalLight(0xff8fab, 1.2);
+keyLight.position.set(3, 5, 3);
+keyLight.castShadow = true;
+scene.add(keyLight);
+
+const fillLight = new THREE.PointLight(0x6644aa, 0.6, 20);
+fillLight.position.set(-4, 2, 2);
+scene.add(fillLight);
+
+const rimLight = new THREE.PointLight(0xff4d6d, 0.5, 15);
+rimLight.position.set(0, -2, -5);
+scene.add(rimLight);
+
+// ─── BACKGROUND PARTICLES ────────────────────────────────────────────────────
+const starGeo = new THREE.BufferGeometry();
+const starCount = 2000;
+const starPos = new Float32Array(starCount * 3);
+for (let i = 0; i < starCount * 3; i++) starPos[i] = (Math.random() - 0.5) * 80;
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+const starMat = new THREE.PointsMaterial({
+  color: 0xffccdd, size: 0.04, transparent: true, opacity: 0.5,
+  blending: THREE.AdditiveBlending, depthWrite: false
+});
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+// ─── FLOATING HEARTS ─────────────────────────────────────────────────────────
+const hearts = [];
+function makeHeart() {
+  const geo = new THREE.TorusGeometry(0.08, 0.04, 8, 16, Math.PI);
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xff6b81, emissive: 0xff4466, emissiveIntensity: 0.8,
+    transparent: true, opacity: 0.7, roughness: 0.2, metalness: 0.1
+  });
+  const group = new THREE.Group();
+  const torus = new THREE.Mesh(geo, mat);
+  group.add(torus);
+  // Two spheres to form a heart tip
+  const s1 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), mat);
+  s1.position.set(-0.08, 0.0, 0);
+  const s2 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), mat);
+  s2.position.set(0.08, 0.0, 0);
+  group.add(s1, s2);
+  group.position.set(
+    (Math.random() - 0.5) * 14,
+    (Math.random() - 0.5) * 8,
+    (Math.random() - 0.5) * 6 - 2
+  );
+  group.scale.setScalar(0.5 + Math.random() * 0.8);
+  group.userData = {
+    speed: 0.002 + Math.random() * 0.003,
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: 0.3 + Math.random() * 0.5
+  };
+  scene.add(group);
+  hearts.push(group);
+}
+for (let i = 0; i < 22; i++) makeHeart();
+
+// ─── CAKE ─────────────────────────────────────────────────────────────────────
+const cakeGroup = new THREE.Group();
+scene.add(cakeGroup);
+
+// Cake layers
+function makeCakeLayer(r, h, color, y) {
+  const geo = new THREE.CylinderGeometry(r, r * 1.02, h, 32);
+  const mat = new THREE.MeshStandardMaterial({
+    color, roughness: 0.6, metalness: 0.05,
+    emissive: color, emissiveIntensity: 0.05
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.y = y;
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+const layer1 = makeCakeLayer(1.1, 0.55, 0xff9eb5, -0.53);
+const layer2 = makeCakeLayer(0.85, 0.55, 0xff6b81, 0.0);
+const layer3 = makeCakeLayer(0.6, 0.5, 0xffb3c6, 0.52);
+cakeGroup.add(layer1, layer2, layer3);
+
+// Frosting drips
+for (let i = 0; i < 12; i++) {
+  const angle = (i / 12) * Math.PI * 2;
+  const dripGeo = new THREE.CapsuleGeometry(0.04, 0.15 + Math.random() * 0.1, 4, 4);
+  const dripMat = new THREE.MeshStandardMaterial({
+    color: 0xfff0f5, roughness: 0.3, emissive: 0xffffff, emissiveIntensity: 0.05
+  });
+  const drip = new THREE.Mesh(dripGeo, dripMat);
+  drip.position.set(
+    Math.cos(angle) * 0.87, 0.22,
+    Math.sin(angle) * 0.87
+  );
+  drip.rotation.z = Math.sin(angle) * 0.3;
+  cakeGroup.add(drip);
+}
+
+// Sprinkles
+for (let i = 0; i < 30; i++) {
+  const sg = new THREE.CapsuleGeometry(0.015, 0.06, 4, 4);
+  const colors = [0xff6b81, 0xffd166, 0x06d6a0, 0xa8dadc];
+  const sm = new THREE.MeshStandardMaterial({
+    color: colors[Math.floor(Math.random() * colors.length)],
+    emissiveIntensity: 0.3, emissive: colors[Math.floor(Math.random() * colors.length)]
+  });
+  const spr = new THREE.Mesh(sg, sm);
+  const angle = Math.random() * Math.PI * 2;
+  const rad = Math.random() * 0.85;
+  spr.position.set(Math.cos(angle) * rad, 0.78, Math.sin(angle) * rad);
+  spr.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+  cakeGroup.add(spr);
+}
+
+// Candles
+const candleData = [
+  { x: -0.28, z: -0.1 },
+  { x: 0, z: 0.15 },
+  { x: 0.28, z: -0.1 }
+];
+const candleMeshes = [];
+const flameLights = [];
+
+candleData.forEach((cd, idx) => {
+  const cg = new THREE.Group();
+
+  // Candle body
+  const cBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.035, 0.035, 0.35, 12),
+    new THREE.MeshStandardMaterial({ color: 0xfff5f7, roughness: 0.8 })
+  );
+  cBody.position.y = 0.17;
+  cg.add(cBody);
+
+  // Flame group
+  const flameGroup = new THREE.Group();
+  flameGroup.position.y = 0.38;
+  flameGroup.userData.idx = idx;
+
+  // Outer flame
+  const flameGeo = new THREE.ConeGeometry(0.04, 0.14, 8);
+  const flameMat = new THREE.MeshStandardMaterial({
+    color: 0xffaa00, emissive: 0xff6600, emissiveIntensity: 2,
+    transparent: true, opacity: 0.9, depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+  const flameMesh = new THREE.Mesh(flameGeo, flameMat);
+  flameGroup.add(flameMesh);
+
+  // Inner flame (brighter core)
+  const innerFlame = new THREE.Mesh(
+    new THREE.ConeGeometry(0.02, 0.1, 8),
+    new THREE.MeshStandardMaterial({
+      color: 0xffff88, emissive: 0xffffaa, emissiveIntensity: 3,
+      transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending
+    })
+  );
+  flameGroup.add(innerFlame);
+
+  // Flame point light
+  const fLight = new THREE.PointLight(0xff9922, 0.6, 3);
+  fLight.position.y = 0.1;
+  flameGroup.add(fLight);
+  flameLights.push(fLight);
+
+  cg.add(flameGroup);
+  cg.position.set(cd.x, 0.77, cd.z);
+  cakeGroup.add(cg);
+  candleMeshes.push({ flameGroup, flameMat, innerFlame });
+});
+
+// Candle glow sphere
+const candleGlow = new THREE.Mesh(
+  new THREE.SphereGeometry(0.8, 16, 16),
+  new THREE.MeshBasicMaterial({
+    color: 0xff9922, transparent: true, opacity: 0.04,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  })
+);
+candleGlow.position.y = 1.4;
+cakeGroup.add(candleGlow);
+
+cakeGroup.position.set(0, -1.2, 0);
+cakeGroup.visible = false;
+
+// ─── BLOW ANIMATION ──────────────────────────────────────────────────────────
+function blowCandlesThree() {
+  candleMeshes.forEach((c, i) => {
+    setTimeout(() => {
+      // animate flame scale to 0
+      const startTime = Date.now();
+      const anim = () => {
+        const t = Math.min((Date.now() - startTime) / 400, 1);
+        const s = 1 - t;
+        c.flameGroup.scale.set(s, s, s);
+        c.flameMat.opacity = 0.9 * (1 - t);
+        flameLights[i].intensity = 0.6 * (1 - t);
+        if (t < 1) requestAnimationFrame(anim);
+        else { c.flameGroup.visible = false; flameLights[i].intensity = 0; }
+      };
+      anim();
+    }, i * 180);
+  });
+  // Smoke puffs (particles rising up)
+  setTimeout(() => createSmokeParticles(), 200);
+}
+
+// ─── SMOKE PARTICLES ─────────────────────────────────────────────────────────
+function createSmokeParticles() {
+  const particles = [];
+  for (let i = 0; i < 30; i++) {
+    const geo = new THREE.SphereGeometry(0.03 + Math.random() * 0.03, 6, 6);
+    const mat = new THREE.MeshBasicMaterial({
+      color: 0xccbbcc, transparent: true, opacity: 0.25,
+      blending: THREE.NormalBlending, depthWrite: false
+    });
+    const p = new THREE.Mesh(geo, mat);
+    const cd = candleData[Math.floor(Math.random() * 3)];
+    p.position.set(
+      cd.x + (Math.random() - 0.5) * 0.1,
+      0.38 - 1.2 + 0.77 + 1.2, // world y
+      cd.z + (Math.random() - 0.5) * 0.1
+    );
+    p.userData = {
+      vy: 0.008 + Math.random() * 0.005,
+      life: 0,
+      maxLife: 80 + Math.random() * 40
+    };
+    scene.add(p);
+    particles.push({ mesh: p, mat });
+  }
+  const animSmoke = () => {
+    let alive = false;
+    particles.forEach(({ mesh, mat }) => {
+      if (!mesh.visible) return;
+      mesh.userData.life++;
+      const t = mesh.userData.life / mesh.userData.maxLife;
+      mesh.position.y += mesh.userData.vy;
+      mesh.position.x += (Math.random() - 0.5) * 0.005;
+      mat.opacity = 0.25 * (1 - t);
+      mesh.scale.setScalar(1 + t * 2);
+      if (t >= 1) { scene.remove(mesh); mesh.visible = false; }
+      else alive = true;
+    });
+    if (alive) requestAnimationFrame(animSmoke);
+  };
+  animSmoke();
+}
+
+// ─── FLOWERS SCENE ───────────────────────────────────────────────────────────
+const flowerGroup = new THREE.Group();
+scene.add(flowerGroup);
+flowerGroup.visible = false;
+
+function makePetal(color, angle, r) {
+  const geo = new THREE.SphereGeometry(0.12, 8, 6);
+  geo.scale(1, 0.5, 2);
+  const mat = new THREE.MeshStandardMaterial({
+    color, roughness: 0.6, metalness: 0,
+    emissive: color, emissiveIntensity: 0.15,
+    transparent: true, opacity: 0.92
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(Math.cos(angle) * r, Math.sin(angle) * r * 0.3, 0);
+  m.rotation.z = angle;
+  return m;
+}
+
+function makeFlower(cx, cy, cz, scale, mainColor, centerColor) {
+  const g = new THREE.Group();
+  const petalCount = 6 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < petalCount; i++) {
+    g.add(makePetal(mainColor, (i / petalCount) * Math.PI * 2, 0.22));
+  }
+  // Center
+  const center = new THREE.Mesh(
+    new THREE.SphereGeometry(0.1, 10, 10),
+    new THREE.MeshStandardMaterial({
+      color: centerColor, emissive: centerColor, emissiveIntensity: 0.4, roughness: 0.4
+    })
+  );
+  g.add(center);
+  // Stem
+  const stem = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.015, 0.02, 0.6 + Math.random() * 0.4, 6),
+    new THREE.MeshStandardMaterial({ color: 0x4a7c59, roughness: 0.9 })
+  );
+  stem.position.y = -0.35;
+  g.add(stem);
+  g.position.set(cx, cy, cz);
+  g.scale.setScalar(scale);
+  g.userData = { baseY: cy, wobble: Math.random() * Math.PI * 2 };
+  flowerGroup.add(g);
+  return g;
+}
+
+const flowerColors = [
+  [0xff9eb5, 0xffd6e0, 0xffdd00],
+  [0xff6b81, 0xffb3c6, 0xffcc00],
+  [0xffc8dd, 0xff9eb5, 0xffeaa7],
+  [0xe8b4bc, 0xffc8dd, 0xffdd88],
+  [0xffb3c6, 0xff9eb5, 0xffd166],
+];
+
+const flowerMeshes = [];
+// Bouquet arrangement
+const bouquetPositions = [
+  [0, 0, 0, 1.1],
+  [-0.55, -0.2, 0.2, 0.9],
+  [0.55, -0.15, 0.15, 0.9],
+  [-0.25, 0.4, -0.1, 0.85],
+  [0.3, 0.45, -0.05, 0.85],
+  [-0.85, 0.15, 0.1, 0.75],
+  [0.85, 0.2, 0.05, 0.75],
+  [0, -0.5, 0.3, 0.8],
+  [-0.5, 0.75, 0, 0.7],
+  [0.5, 0.7, 0, 0.7],
+];
+
+bouquetPositions.forEach(([x, y, z, s]) => {
+  const c = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+  flowerMeshes.push(makeFlower(x, y, z, s, c[0], c[2]));
+});
+
+// Ribbon
+const ribbonGeo = new THREE.TorusGeometry(0.6, 0.04, 8, 32, Math.PI * 0.6);
+const ribbonMat = new THREE.MeshStandardMaterial({
+  color: 0xff4d6d, emissive: 0xff4466, emissiveIntensity: 0.3, roughness: 0.4
+});
+const ribbon = new THREE.Mesh(ribbonGeo, ribbonMat);
+ribbon.position.set(0, -0.9, 0.2);
+ribbon.rotation.x = Math.PI * 0.3;
+flowerGroup.add(ribbon);
+
+flowerGroup.position.set(0, 0, 0);
+
+// ─── CONFETTI PARTICLES ──────────────────────────────────────────────────────
+const confettiParticles = [];
+
+function launchConfettiThree() {
+  const confettiColors = [0xff6b81, 0xffd166, 0x06d6a0, 0x118ab2, 0xffb3c6, 0xa8dadc];
+  for (let i = 0; i < 200; i++) {
+    setTimeout(() => {
+      const geo = new THREE.PlaneGeometry(0.08, 0.08);
+      const mat = new THREE.MeshBasicMaterial({
+        color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+        side: THREE.DoubleSide, transparent: true, opacity: 0.9
+      });
+      const m = new THREE.Mesh(geo, mat);
+      m.position.set(
+        (Math.random() - 0.5) * 12,
+        6 + Math.random() * 4,
+        (Math.random() - 0.5) * 6
+      );
+      m.userData = {
+        vy: -(0.04 + Math.random() * 0.06),
+        vx: (Math.random() - 0.5) * 0.02,
+        vr: (Math.random() - 0.5) * 0.1,
+        life: 0
+      };
+      scene.add(m);
+      confettiParticles.push({ mesh: m, mat });
+    }, i * 20);
+  }
+}
+
+// ─── BACKGROUND TRANSITION ───────────────────────────────────────────────────
+const bgColors = {
+  1: { fog: 0x000010, ambient: 0.4, key: 0.8 },
+  2: { fog: 0x050008, ambient: 0.6, key: 1.2 },
+  3: { fog: 0x020010, ambient: 0.5, key: 0.9 },
+  4: { fog: 0x000008, ambient: 0.4, key: 0.7 },
+  5: { fog: 0x08000a, ambient: 0.5, key: 1.0 },
+  6: { fog: 0x000012, ambient: 0.4, key: 0.8 },
+  7: { fog: 0x060005, ambient: 0.45, key: 0.9 },
+  8: { fog: 0x080008, ambient: 0.7, key: 1.5 },
+};
+
+let targetCamPos = new THREE.Vector3(0, 1.5, 7);
+let targetCamLook = new THREE.Vector3(0, 0, 0);
+
+function transitionBackground(n) {
+  const cfg = bgColors[n] || bgColors[1];
+  scene.fog.color.setHex(cfg.fog);
+  cakeGroup.visible = (n === 2);
+  flowerGroup.visible = (n === 3);
+
+  // Camera movement per scene
+  const camMoves = {
+    1: { pos: [0, 1.5, 7], look: [0, 0, 0] },
+    2: { pos: [0, 0.5, 4.5], look: [0, 0.3, 0] },
+    3: { pos: [0.3, 0.2, 4], look: [0, 0.1, 0] },
+    4: { pos: [-0.3, 0.8, 6.5], look: [0, 0.5, 0] },
+    5: { pos: [0.2, 1.2, 5.5], look: [0, 0.2, 0] },
+    6: { pos: [-0.2, 0.9, 6], look: [0, 0.3, 0] },
+    7: { pos: [0.1, 0.6, 5], look: [0, 0, 0] },
+    8: { pos: [0, 1.8, 5], look: [0, 0.5, 0] },
+  };
+  const m = camMoves[n] || camMoves[1];
+  targetCamPos.set(...m.pos);
+  targetCamLook.set(...m.look);
+}
+
+// ─── RENDER LOOP ─────────────────────────────────────────────────────────────
+let clock = new THREE.Clock();
+let time = 0;
+
+// Camera look-at helper
+const camTarget = new THREE.Vector3(0, 0, 0);
+
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+  time += delta;
+
+  // Camera lerp
+  camera.position.lerp(targetCamPos, 0.025);
+  camTarget.lerp(targetCamLook, 0.025);
+  camera.lookAt(camTarget);
+
+  // Subtle mouse parallax
+  const mx = (mouseX / window.innerWidth - 0.5) * 0.08;
+  const my = (mouseY / window.innerHeight - 0.5) * 0.04;
+  camera.position.x += (mx - camera.position.x + targetCamPos.x) * 0.01;
+
+  // Stars rotate slowly
+  stars.rotation.y = time * 0.02;
+  stars.rotation.x = time * 0.005;
+
+  // Hearts float
+  hearts.forEach(h => {
+    h.position.y += h.userData.speed;
+    h.userData.wobble += h.userData.wobbleSpeed * delta;
+    h.position.x += Math.sin(h.userData.wobble) * 0.003;
+    h.rotation.y = time * 0.3;
+    if (h.position.y > 6) h.position.y = -5;
+  });
+
+  // Candle flicker
+  if (currentScene === 2 && !candlesBlown) {
+    candleMeshes.forEach((c, i) => {
+      const flicker = 0.5 + Math.sin(time * 15 + i * 2.1) * 0.15 + Math.random() * 0.1;
+      flameLights[i].intensity = flicker;
+      c.flameGroup.scale.x = 0.9 + Math.sin(time * 12 + i) * 0.1;
+      c.flameGroup.scale.z = 0.9 + Math.cos(time * 10 + i) * 0.1;
+    });
+    // Gentle cake bob
+    cakeGroup.position.y = -1.2 + Math.sin(time * 1.5) * 0.04;
+    cakeGroup.rotation.y = time * 0.15;
+  }
+
+  // Flower sway
+  if (currentScene === 3) {
+    flowerMeshes.forEach((f, i) => {
+      f.rotation.z = Math.sin(time * 0.8 + i * 0.7) * 0.06;
+      f.rotation.x = Math.cos(time * 0.6 + i * 0.5) * 0.04;
+      f.position.y = f.userData.baseY + Math.sin(time * 0.9 + i) * 0.02;
+    });
+    ribbon.rotation.z = Math.sin(time * 0.5) * 0.05;
+    flowerGroup.rotation.y = Math.sin(time * 0.3) * 0.08;
+  }
+
+  // Confetti physics
+  confettiParticles.forEach(({ mesh, mat }) => {
+    if (!mesh.visible) return;
+    mesh.position.y += mesh.userData.vy;
+    mesh.position.x += mesh.userData.vx;
+    mesh.rotation.x += mesh.userData.vr;
+    mesh.rotation.z += mesh.userData.vr * 0.7;
+    mesh.userData.life++;
+    if (mesh.userData.life > 180) {
+      mat.opacity = Math.max(0, mat.opacity - 0.015);
     }
+    if (mesh.position.y < -6 || mat.opacity <= 0) {
+      scene.remove(mesh);
+      mesh.visible = false;
+    }
+  });
+
+  // Scene-specific lights pulse on final
+  if (currentScene === 8) {
+    keyLight.intensity = 1.5 + Math.sin(time * 2) * 0.3;
+    fillLight.intensity = 0.6 + Math.sin(time * 1.3) * 0.2;
+    rimLight.intensity = 0.5 + Math.sin(time * 1.7) * 0.2;
   }
-  t();
+
+  renderer.render(scene, camera);
 }
 
-/* 🎂 */
-function blowCandles(){
-  document.querySelectorAll(".flame").forEach(f=>f.style.display="none");
-  setTimeout(()=>nextPage(3),1200);
-}
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+setTimeout(() => {
+  const loading = document.getElementById('loading');
+  loading.style.opacity = '0';
+  setTimeout(() => loading.style.display = 'none', 1000);
+  animate();
+  // Show scene 1 environment
+  transitionBackground(1);
+}, 1600);
 
-/* 🎉 */
-function launchConfetti(){
-  const colors=["#ff6b81","#ffd166","#06d6a0","#118ab2"];
-  for(let i=0;i<60;i++){
-    let c=document.createElement("div");
-    c.className="confetti";
-    c.style.background=colors[Math.floor(Math.random()*colors.length)];
-    c.style.left=Math.random()*100+"vw";
-    c.style.animationDuration=(Math.random()*2+2)+"s";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),3000);
-  }
-}
 </script>
-
 </body>
 </html>
