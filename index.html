@@ -396,9 +396,27 @@ softer
   <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_5f9f4c06fa.mp3" type="audio/mpeg">
 </audio>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-
 <script>
+// Load Three.js dynamically then boot the app
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://unpkg.com/three@0.134.0/build/three.min.js';
+  s.onload = bootApp;
+  s.onerror = function() {
+    // fallback CDN
+    var s2 = document.createElement('script');
+    s2.src = 'https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js';
+    s2.onload = bootApp;
+    s2.onerror = function() {
+      document.getElementById('loading').innerHTML = '<div style="color:#ff6b81;font-family:serif;text-align:center;padding:40px">Could not load 3D library.<br><br><small>Try refreshing or check your connection.</small></div>';
+    };
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s);
+})();
+
+function bootApp() {
+
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let currentScene = 1;
 let candlesBlown = false;
@@ -636,7 +654,7 @@ cakeGroup.add(layer1, layer2, layer3);
 // Frosting drips
 for (let i = 0; i < 12; i++) {
   const angle = (i / 12) * Math.PI * 2;
-  const dripGeo = new THREE.CapsuleGeometry(0.04, 0.15 + Math.random() * 0.1, 4, 4);
+  const dripGeo = new THREE.CylinderGeometry(0.04, 0.025, 0.15 + Math.random() * 0.1, 6);
   const dripMat = new THREE.MeshStandardMaterial({
     color: 0xfff0f5, roughness: 0.3, emissive: 0xffffff, emissiveIntensity: 0.05
   });
@@ -651,7 +669,7 @@ for (let i = 0; i < 12; i++) {
 
 // Sprinkles
 for (let i = 0; i < 30; i++) {
-  const sg = new THREE.CapsuleGeometry(0.015, 0.06, 4, 4);
+  const sg = new THREE.CylinderGeometry(0.015, 0.015, 0.06, 5);
   const colors = [0xff6b81, 0xffd166, 0x06d6a0, 0xa8dadc];
   const sm = new THREE.MeshStandardMaterial({
     color: colors[Math.floor(Math.random() * colors.length)],
@@ -1050,6 +1068,7 @@ setTimeout(() => {
   transitionBackground(1);
 }, 1600);
 
+} // end bootApp
 </script>
 </body>
 </html>
