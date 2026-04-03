@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Happy Birthday Aaryen ⚡</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", cursive;
+      text-align: center;
+      background: #fff8e7;
+      overflow: hidden;
+    }
 
+    .page {
+      display: none;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .active {
+      display: flex;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      background: #ffcc00;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    h2, p {
+      max-width: 500px;
+    }
+
+    .cake {
+      font-size: 80px;
+    }
+
+    .orchid {
+      font-size: 60px;
+    }
+
+    .pikachu {
+      position: absolute;
+      font-size: 40px;
+      animation: float 6s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="pikachu" style="top:10%; left:10%;">⚡</div>
+<div class="pikachu" style="top:70%; left:80%;">⚡</div>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+  <h2>Initializing birthday protocol…</h2>
+  <p>Subject detected: Aaryen ⚡</p>
+  <button onclick="nextPage(2)">Begin</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+  <div class="cake">🎂</div>
+  <h2>today is yours.</h2>
+  <p>so everything else can wait… just for a bit</p>
+  <button onclick="blowCandles()">blow candles 🎂</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+  <div class="orchid">🌸🌸🌸</div>
+  <p>
+    i thought about what would suit you<br><br>
+    not loud<br>
+    not obvious<br><br>
+    something a little rare<br>
+    quietly precise<br><br>
+    so… orchids
+  </p>
+  <button onclick="nextPage(4)">ok continue</button>
+</div>
+
+<!-- PAGE 4 (SIMULATION) -->
+<div id="page4" class="page">
+  <h2>simulation mode</h2>
+  <p>select input:</p>
+  <button onclick="runSim()">proceed</button>
+  <button onclick="runSim()">proceed</button>
+
+  <p id="output" style="margin-top:20px;"></p>
+  <button id="finalBtn" style="display:none;" onclick="nextPage(5)">view result</button>
+</div>
+
+<!-- PAGE 5 -->
+<div id="page5" class="page">
+  <h2>after repeated trials…</h2>
+  <p>
+    variance reduces<br>
+    estimate stabilises<br><br>
+    result:<br>
+    unchanged
+  </p>
+  <button onclick="nextPage(6)">continue</button>
+</div>
+
+<!-- FINAL PAGE -->
+<div id="page6" class="page">
+  <h1>Happy Birthday, Aaryen ⚡</h1>
+  <p>
+    i hope this year feels a little softer<br>
+    a little kinder<br>
+    and still very you<br><br>
+    i really like having you in my life<br>
+    (in more ways than one)
+  </p>
+
+  <button onclick="playSong()">play something 🎶</button>
+</div>
+
+<script>
+  function nextPage(num) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + num).classList.add('active');
+  }
+
+  function blowCandles() {
+    document.querySelector('.cake').innerText = "🎂✨";
+    setTimeout(() => nextPage(3), 1000);
+  }
+
+  let clicks = 0;
+
+  const outputs = [
+    "outcome: inconclusive\nsignal persists",
+    "variance observed\nnot sufficient to exit",
+    "path unclear\ndirection consistent",
+    "uncertainty present\nstill retained",
+    "no clear model\nstill choosing this",
+    "model compromised\nexternal influence detected"
+  ];
+
+  function runSim() {
+    const random = outputs[Math.floor(Math.random() * outputs.length)];
+    document.getElementById("output").innerText = random;
+
+    clicks++;
+    if (clicks >= 4) {
+      document.getElementById("finalBtn").style.display = "inline-block";
+    }
+  }
+
+  function playSong() {
+    alert("happy birthday to youuuu ⚡🎶 (imagine me singing badly)");
+  }
+</script>
+
+</body>
+</html>
