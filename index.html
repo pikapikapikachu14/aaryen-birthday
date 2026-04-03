@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Happy Birthday Aaryen ⚡</title>
+  <title>Happy Birthday Aaryen</title>
 
   <style>
     body {
       margin: 0;
-      font-family: "Comic Sans MS", cursive;
+      font-family: 'Segoe UI', sans-serif;
       text-align: center;
-      background: #fff8e7;
+      background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
+      color: #fff;
       overflow: hidden;
     }
 
@@ -26,13 +27,15 @@
     }
 
     button {
-      padding: 12px 20px;
+      padding: 12px 24px;
       border: none;
-      background: #ffcc00;
-      border-radius: 12px;
+      background: #ff4d6d;
+      color: white;
+      border-radius: 25px;
       cursor: pointer;
       margin-top: 20px;
-      font-size: 16px;
+      font-size: 15px;
+      box-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
     }
 
     h2, p {
@@ -40,56 +43,12 @@
       white-space: pre-line;
     }
 
-    /* 🎂 CAKE */
-    .cake-box {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin-bottom: 20px;
-    }
-
-    .cake-base {
-      width: 100%;
-      height: 60px;
-      background: pink;
-      border-radius: 10px;
-      position: absolute;
-      bottom: 0;
-    }
-
-    .candle {
-      width: 8px;
-      height: 30px;
-      background: #fff;
-      position: absolute;
-      top: 10px;
-    }
-
-    .candle::after {
-      content: "";
-      width: 8px;
-      height: 8px;
-      background: orange;
-      border-radius: 50%;
-      position: absolute;
-      top: -10px;
-      left: 0;
-    }
-
-    .candle:nth-child(2) { left: 20px; }
-    .candle:nth-child(3) { left: 50px; }
-    .candle:nth-child(4) { left: 80px; }
-
-    /* 🌸 */
-    .orchid {
-      font-size: 60px;
-    }
-
-    /* 💖 FLOATING HEARTS */
+    /* 💖 NEON HEARTS */
     .heart {
       position: fixed;
       color: #ff4d6d;
-      font-size: 20px;
+      font-size: 18px;
+      text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d;
       animation: floatUp 6s linear infinite;
     }
 
@@ -98,30 +57,63 @@
       to { transform: translateY(-10vh); opacity: 0; }
     }
 
-    /* ⚡ */
-    .pikachu {
-      position: absolute;
-      font-size: 40px;
-      animation: float 6s infinite ease-in-out;
+    /* 🎂 BETTER CAKE */
+    .cake {
+      width: 120px;
+      height: 80px;
+      background: #ff9eb5;
+      border-radius: 12px;
+      position: relative;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(255,158,181,0.5);
     }
 
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-      100% { transform: translateY(0px); }
+    .candle {
+      width: 6px;
+      height: 25px;
+      background: white;
+      position: absolute;
+      top: -25px;
+    }
+
+    .candle:nth-child(1) { left: 30px; }
+    .candle:nth-child(2) { left: 55px; }
+    .candle:nth-child(3) { left: 80px; }
+
+    .flame {
+      width: 8px;
+      height: 8px;
+      background: orange;
+      border-radius: 50%;
+      position: absolute;
+      top: -8px;
+      left: -1px;
+      animation: flicker 0.3s infinite;
+    }
+
+    @keyframes flicker {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* 🌸 ORCHID IMAGE */
+    .orchid img {
+      width: 200px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
     }
 
     /* 💖 CONFETTI */
     .confetti {
       position: fixed;
-      font-size: 12px;
-      top: -10px;
+      font-size: 14px;
       animation: fall 3s linear infinite;
     }
 
     @keyframes fall {
       to {
-        transform: translateY(100vh) rotate(360deg);
+        transform: translateY(100vh);
       }
     }
   </style>
@@ -131,194 +123,180 @@
 
 <!-- 🎵 MUSIC -->
 <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_9c0c5f2c1b.mp3" type="audio/mp3">
+  <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_5f9f4c06fa.mp3">
 </audio>
-
-<!-- ⚡ -->
-<div class="pikachu" style="top:10%; left:10%;">⚡</div>
-<div class="pikachu" style="top:70%; left:80%;">⚡</div>
 
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
   <h2>Initializing birthday protocol…</h2>
-  <p>Subject detected: Aaryen ⚡</p>
+  <p>Subject detected: Aaryen</p>
   <button onclick="nextPage(2)">Begin</button>
 </div>
 
 <!-- PAGE 2 -->
 <div id="page2" class="page">
-  <div class="cake-box">
-    <div class="cake-base"></div>
-    <div class="candle"></div>
-    <div class="candle"></div>
-    <div class="candle"></div>
+  <div class="cake">
+    <div class="candle"><div class="flame"></div></div>
+    <div class="candle"><div class="flame"></div></div>
+    <div class="candle"><div class="flame"></div></div>
   </div>
 
-  <h2>today is yours.</h2>
-  <p>so everything else can wait… just for a bit</p>
-  <button onclick="blowCandles()">blow candles 🎂</button>
+  <h2>today is yours</h2>
+  <p>pause everything else for a second</p>
+  <button onclick="blowCandles()">blow candles</button>
 </div>
 
 <!-- PAGE 3 -->
 <div id="page3" class="page">
-  <div class="orchid">🌸🌸🌸</div>
+  <div class="orchid">
+    <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6" />
+  </div>
+
   <p>
-i thought about what would suit you
-
-not loud  
 not obvious  
+not loud  
 
-something a little rare  
-quietly precise  
+something precise  
+something rare  
 
-so… orchids
+felt like you
   </p>
-  <button onclick="nextPage(4)">ok continue</button>
+
+  <button onclick="nextPage(4)">continue</button>
 </div>
 
 <!-- PAGE 4 -->
 <div id="page4" class="page">
-  <h2>simulation mode</h2>
-  <p>select input:</p>
-  <button onclick="runSim()">proceed</button>
-  <button onclick="runSim()">proceed</button>
+  <h2>simulation</h2>
 
-  <p id="output" style="margin-top:20px;"></p>
-  <button id="finalBtn" style="display:none;" onclick="nextPage(5)">view result</button>
+  <button onclick="runSim()">run</button>
+  <button onclick="runSim()">run</button>
+
+  <p id="output"></p>
+  <button id="finalBtn" style="display:none;" onclick="nextPage(5)">resolve</button>
 </div>
 
 <!-- PAGE 5 -->
 <div id="page5" class="page">
-  <h2>after repeated trials…</h2>
   <p>
-variance reduces  
-estimate stabilises  
+posterior updates stabilise  
+variance compresses  
 
-result:  
-unchanged
+signal: persistent  
+
+no exit condition triggered
   </p>
 
-  <p style="opacity:0.6;">
-    time feels different with you  
-    (not saying why)
+  <p style="opacity:0.5;">
+    time feels… slower here  
+    (in a good way)
   </p>
 
   <button onclick="nextPage(6)">continue</button>
 </div>
 
-<!-- FINAL PAGE -->
+<!-- FINAL -->
 <div id="page6" class="page">
-  <h1>Happy Birthday, Aaryen ⚡</h1>
+  <h1>Happy Birthday, Aaryen</h1>
   <p id="finalText"></p>
-
-  <button onclick="playSong()">press this pikachu ⚡</button>
+  <button onclick="playSong()">play</button>
 </div>
 
 <script>
 let musicStarted = false;
 
-/* 💖 HEARTS BACKGROUND */
+/* 💖 HEARTS */
 setInterval(() => {
   let heart = document.createElement("div");
-  heart.classList.add("heart");
+  heart.className = "heart";
   heart.innerText = "❤";
-
-  heart.style.left = Math.random() * 100 + "vw";
-
+  heart.style.left = Math.random()*100 + "vw";
   document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+},400);
 
-  setTimeout(() => heart.remove(), 6000);
-}, 500);
+/* NAV */
+function nextPage(num){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+num).classList.add('active');
 
-/* PAGE NAV */
-function nextPage(num) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page' + num).classList.add('active');
-
-  if (!musicStarted) {
+  if(!musicStarted){
     document.getElementById("bgMusic").play();
-    musicStarted = true;
+    musicStarted=true;
   }
 
-  if (num === 6) {
+  if(num===6){
     launchConfetti();
 
-    const text = `i hope this year feels a little softer
+    const text = `i hope this year feels softer
 and a little kinder
+
 and still very you
 
-i really like having you in my life
+i like having you in my life
 (in more ways than one)`;
 
-    typeText(document.getElementById("finalText"), text, 35);
+    typeText(document.getElementById("finalText"),text,30);
   }
-}
-
-/* ⌨️ TYPING */
-function typeText(element, text, speed = 40) {
-  element.innerHTML = "";
-  let i = 0;
-
-  function typing() {
-    if (i < text.length) {
-      element.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typing, speed);
-    }
-  }
-
-  typing();
 }
 
 /* 🎂 */
-function blowCandles() {
-  document.querySelectorAll(".candle").forEach(c => {
-    c.style.opacity = "0.2";
-  });
-
-  setTimeout(() => nextPage(3), 1200);
+function blowCandles(){
+  document.querySelectorAll(".flame").forEach(f=>f.style.display="none");
+  setTimeout(()=>nextPage(3),1200);
 }
 
-/* 💖 CONFETTI */
-function launchConfetti() {
-  for (let i = 0; i < 40; i++) {
-    let confetti = document.createElement("div");
-    confetti.classList.add("confetti");
-    confetti.innerText = "❤";
-
-    confetti.style.left = Math.random() * 100 + "vw";
-    confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
-
-    document.body.appendChild(confetti);
-
-    setTimeout(() => confetti.remove(), 3000);
+/* 🎉 */
+function launchConfetti(){
+  const colors=["#ff4d6d","#ffd166","#06d6a0","#118ab2"];
+  for(let i=0;i<40;i++){
+    let c=document.createElement("div");
+    c.className="confetti";
+    c.innerText="❤";
+    c.style.color=colors[Math.floor(Math.random()*colors.length)];
+    c.style.left=Math.random()*100+"vw";
+    c.style.animationDuration=(Math.random()*2+2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
   }
 }
 
+/* ⌨️ */
+function typeText(el,text,speed){
+  el.innerHTML="";
+  let i=0;
+  function t(){
+    if(i<text.length){
+      el.innerHTML+=text[i++];
+      setTimeout(t,speed);
+    }
+  }
+  t();
+}
+
 /* 🎵 */
-function playSong() {
+function playSong(){
   document.getElementById("bgMusic").play();
 }
 
-/* 🧠 SIMULATION */
-let clicks = 0;
+/* 🧠 */
+let clicks=0;
 
-const outputs = [
-  "outcome: inconclusive\nsignal persists",
-  "variance observed\nnot sufficient to exit",
-  "path unclear\ndirection consistent",
-  "uncertainty present\nstill retained",
-  "no clear model\nstill choosing this",
-  "model compromised\nexternal influence detected"
+const outputs=[
+  "likelihood ratio > 1",
+  "posterior probability increasing",
+  "model not rejecting hypothesis",
+  "signal dominates noise",
+  "trend persists under perturbation",
+  "no justification to unwind"
 ];
 
-function runSim() {
-  const random = outputs[Math.floor(Math.random() * outputs.length)];
-  document.getElementById("output").innerText = random;
-
+function runSim(){
+  const r=outputs[Math.floor(Math.random()*outputs.length)];
+  document.getElementById("output").innerText=r;
   clicks++;
-  if (clicks >= 4) {
-    document.getElementById("finalBtn").style.display = "inline-block";
+  if(clicks>=4){
+    document.getElementById("finalBtn").style.display="inline-block";
   }
 }
 </script>
