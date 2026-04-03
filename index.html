@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Happy Birthday Aaryen</title>
+  <title>For Aaryen</title>
 
   <style>
     body {
@@ -9,7 +9,7 @@
       font-family: 'Segoe UI', sans-serif;
       text-align: center;
       background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
-      color: #fff;
+      color: white;
       overflow: hidden;
     }
 
@@ -27,29 +27,29 @@
     }
 
     button {
-      padding: 12px 24px;
+      padding: 12px 26px;
       border: none;
-      background: #ff4d6d;
+      background: #ff6b81;
       color: white;
-      border-radius: 25px;
+      border-radius: 30px;
       cursor: pointer;
       margin-top: 20px;
       font-size: 15px;
-      box-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
+      box-shadow: 0 0 20px rgba(255,107,129,0.6);
     }
 
     h2, p {
-      max-width: 500px;
+      max-width: 520px;
       white-space: pre-line;
     }
 
     /* 💖 NEON HEARTS */
     .heart {
       position: fixed;
-      color: #ff4d6d;
+      color: #ff8fab;
       font-size: 18px;
-      text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d;
-      animation: floatUp 6s linear infinite;
+      text-shadow: 0 0 8px #ff8fab, 0 0 20px #ff4d6d;
+      animation: floatUp 6s linear infinite, flicker 2s infinite;
     }
 
     @keyframes floatUp {
@@ -57,28 +57,39 @@
       to { transform: translateY(-10vh); opacity: 0; }
     }
 
-    /* 🎂 BETTER CAKE */
+    @keyframes flicker {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* 🎂 CAKE */
     .cake {
-      width: 120px;
-      height: 80px;
-      background: #ff9eb5;
-      border-radius: 12px;
+      width: 140px;
+      height: 90px;
+      background: linear-gradient(145deg, #ff9eb5, #ff6b81);
+      border-radius: 14px;
       position: relative;
       margin-bottom: 20px;
-      box-shadow: 0 0 20px rgba(255,158,181,0.5);
+      box-shadow: 0 0 30px rgba(255,107,129,0.6);
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
 
     .candle {
       width: 6px;
-      height: 25px;
+      height: 30px;
       background: white;
       position: absolute;
-      top: -25px;
+      top: -30px;
     }
 
-    .candle:nth-child(1) { left: 30px; }
-    .candle:nth-child(2) { left: 55px; }
-    .candle:nth-child(3) { left: 80px; }
+    .candle:nth-child(1){ left:35px; }
+    .candle:nth-child(2){ left:65px; }
+    .candle:nth-child(3){ left:95px; }
 
     .flame {
       width: 8px;
@@ -91,39 +102,44 @@
       animation: flicker 0.3s infinite;
     }
 
-    @keyframes flicker {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* 🌸 ORCHID IMAGE */
-    .orchid img {
-      width: 200px;
+    /* 🌸 FLOWERS */
+    .flowers img {
+      width: 220px;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      box-shadow: 0 0 25px rgba(255,255,255,0.15);
     }
 
-    /* 💖 CONFETTI */
+    /* 🎉 CONFETTI */
     .confetti {
       position: fixed;
-      font-size: 14px;
+      width: 8px;
+      height: 8px;
       animation: fall 3s linear infinite;
     }
 
     @keyframes fall {
-      to {
-        transform: translateY(100vh);
-      }
+      to { transform: translateY(100vh); }
+    }
+
+    /* ❤️ DRAMATIC TEXT */
+    .bigLove {
+      font-size: 32px;
+      font-weight: bold;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
 
 <body>
 
-<!-- 🎵 MUSIC -->
 <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_5f9f4c06fa.mp3">
+  <source src="https://cdn.pixabay.com/audio/2022/11/17/audio_6358b4d2f2.mp3">
 </audio>
 
 <!-- PAGE 1 -->
@@ -142,22 +158,22 @@
   </div>
 
   <h2>today is yours</h2>
-  <p>pause everything else for a second</p>
+  <p>everything else can wait for a moment</p>
   <button onclick="blowCandles()">blow candles</button>
 </div>
 
 <!-- PAGE 3 -->
 <div id="page3" class="page">
-  <div class="orchid">
-    <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6" />
+  <div class="flowers">
+    <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df">
   </div>
 
   <p>
-not obvious  
 not loud  
+not obvious  
 
-something precise  
-something rare  
+something softer  
+a little rare  
 
 felt like you
   </p>
@@ -167,39 +183,69 @@ felt like you
 
 <!-- PAGE 4 -->
 <div id="page4" class="page">
-  <h2>simulation</h2>
+  <p>
+I tried to make this clever
 
-  <button onclick="runSim()">run</button>
-  <button onclick="runSim()">run</button>
+something you'd analyse  
+something structured  
 
-  <p id="output"></p>
-  <button id="finalBtn" style="display:none;" onclick="nextPage(5)">resolve</button>
+but that’s not really the point
+  </p>
+
+  <button onclick="nextPage(5)">continue</button>
 </div>
 
 <!-- PAGE 5 -->
 <div id="page5" class="page">
   <p>
-posterior updates stabilise  
-variance compresses  
+the point is just this:
 
-signal: persistent  
+I am very, very in love with you
 
-no exit condition triggered
-  </p>
+not vaguely  
+not temporarily  
 
-  <p style="opacity:0.5;">
-    time feels… slower here  
-    (in a good way)
+in a this-is-real-for-me way
   </p>
 
   <button onclick="nextPage(6)">continue</button>
 </div>
 
-<!-- FINAL -->
+<!-- PAGE 6 -->
 <div id="page6" class="page">
+  <p>
+Subscription: Aaryen  
+Status: renewed  
+
+Term: for life  
+
+and… if it were up to me  
+
+even after
+  </p>
+
+  <button onclick="nextPage(7)">continue</button>
+</div>
+
+<!-- PAGE 7 -->
+<div id="page7" class="page">
+  <p>
+you make time feel different  
+
+slower  
+softer  
+
+(not saying why)
+  </p>
+
+  <button onclick="nextPage(8)">continue</button>
+</div>
+
+<!-- FINAL -->
+<div id="page8" class="page">
   <h1>Happy Birthday, Aaryen</h1>
   <p id="finalText"></p>
-  <button onclick="playSong()">play</button>
+  <div class="bigLove">I love you.</div>
 </div>
 
 <script>
@@ -225,39 +271,17 @@ function nextPage(num){
     musicStarted=true;
   }
 
-  if(num===6){
+  if(num===8){
     launchConfetti();
 
     const text = `i hope this year feels softer
-and a little kinder
+and kinder
 
 and still very you
 
-i like having you in my life
-(in more ways than one)`;
+i'm really glad i get to love you`;
 
     typeText(document.getElementById("finalText"),text,30);
-  }
-}
-
-/* 🎂 */
-function blowCandles(){
-  document.querySelectorAll(".flame").forEach(f=>f.style.display="none");
-  setTimeout(()=>nextPage(3),1200);
-}
-
-/* 🎉 */
-function launchConfetti(){
-  const colors=["#ff4d6d","#ffd166","#06d6a0","#118ab2"];
-  for(let i=0;i<40;i++){
-    let c=document.createElement("div");
-    c.className="confetti";
-    c.innerText="❤";
-    c.style.color=colors[Math.floor(Math.random()*colors.length)];
-    c.style.left=Math.random()*100+"vw";
-    c.style.animationDuration=(Math.random()*2+2)+"s";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),3000);
   }
 }
 
@@ -274,29 +298,23 @@ function typeText(el,text,speed){
   t();
 }
 
-/* 🎵 */
-function playSong(){
-  document.getElementById("bgMusic").play();
+/* 🎂 */
+function blowCandles(){
+  document.querySelectorAll(".flame").forEach(f=>f.style.display="none");
+  setTimeout(()=>nextPage(3),1200);
 }
 
-/* 🧠 */
-let clicks=0;
-
-const outputs=[
-  "likelihood ratio > 1",
-  "posterior probability increasing",
-  "model not rejecting hypothesis",
-  "signal dominates noise",
-  "trend persists under perturbation",
-  "no justification to unwind"
-];
-
-function runSim(){
-  const r=outputs[Math.floor(Math.random()*outputs.length)];
-  document.getElementById("output").innerText=r;
-  clicks++;
-  if(clicks>=4){
-    document.getElementById("finalBtn").style.display="inline-block";
+/* 🎉 */
+function launchConfetti(){
+  const colors=["#ff6b81","#ffd166","#06d6a0","#118ab2"];
+  for(let i=0;i<60;i++){
+    let c=document.createElement("div");
+    c.className="confetti";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.left=Math.random()*100+"vw";
+    c.style.animationDuration=(Math.random()*2+2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
   }
 }
 </script>
