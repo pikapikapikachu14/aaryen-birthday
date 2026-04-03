@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Happy Birthday Aaryen ⚡</title>
+
   <style>
     body {
       margin: 0;
@@ -9,22 +10,8 @@
       text-align: center;
       background: #fff8e7;
       overflow: hidden;
-      .confetti {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  top: -10px;
-  animation: fall 3s linear infinite;
-}
+    }
 
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(360deg);
-  }
-}   
- </style>
-  
     .page {
       display: none;
       height: 100vh;
@@ -71,12 +58,28 @@
       50% { transform: translateY(-20px); }
       100% { transform: translateY(0px); }
     }
+
+    /* ✅ CONFETTI (correct place now) */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: fall 3s linear infinite;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+      }
+    }
   </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>  
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
 <div class="pikachu" style="top:10%; left:10%;">⚡</div>
 <div class="pikachu" style="top:70%; left:80%;">⚡</div>
 
@@ -109,7 +112,7 @@
   <button onclick="nextPage(4)">ok continue</button>
 </div>
 
-<!-- PAGE 4 (SIMULATION) -->
+<!-- PAGE 4 -->
 <div id="page4" class="page">
   <h2>simulation mode</h2>
   <p>select input:</p>
@@ -148,58 +151,41 @@
 
 <script>
   function nextPage(num) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page' + num).classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + num).classList.add('active');
 
-  if (num === 6) {
-    launchConfetti();
+    if (num === 6) {
+      launchConfetti();
+    }
   }
-}
 
   function blowCandles() {
-    document.querySelector('.cake').innerText = "🎂✨";
+    document.getElementById("cake").innerText = "🎂✨";
     setTimeout(() => nextPage(3), 1000);
   }
 
   function launchConfetti() {
-  for (let i = 0; i < 40; i++) {
-    let confetti = document.createElement("div");
-    confetti.classList.add("confetti");
+    for (let i = 0; i < 40; i++) {
+      let confetti = document.createElement("div");
+      confetti.classList.add("confetti");
 
-    confetti.style.left = Math.random() * 100 + "vw";
-    confetti.style.backgroundColor =
-      ["#ffcc00", "#ff69b4", "#00cfff", "#aaff00"][Math.floor(Math.random() * 4)];
+      confetti.style.left = Math.random() * 100 + "vw";
+      confetti.style.backgroundColor =
+        ["#ffcc00", "#ff69b4", "#00cfff", "#aaff00"][Math.floor(Math.random() * 4)];
 
-    confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+      confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
 
-    document.body.appendChild(confetti);
+      document.body.appendChild(confetti);
 
-    setTimeout(() => confetti.remove(), 3000);
+      setTimeout(() => confetti.remove(), 3000);
+    }
   }
-}
-  
-  function launchConfetti() {
-  for (let i = 0; i < 40; i++) {
-    let confetti = document.createElement("div");
-    confetti.classList.add("confetti");
 
-    confetti.style.left = Math.random() * 100 + "vw";
-    confetti.style.backgroundColor =
-      ["#ffcc00", "#ff69b4", "#00cfff", "#aaff00"][Math.floor(Math.random() * 4)];
-
-    confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
-
-    document.body.appendChild(confetti);
-
-    setTimeout(() => confetti.remove(), 3000);
-  }
-}
-  
   function playSong() {
-  const music = document.getElementById("bgMusic");
-  music.play();
-}
-  
+    const music = document.getElementById("bgMusic");
+    music.play();
+  }
+
   let clicks = 0;
 
   const outputs = [
@@ -219,10 +205,6 @@
     if (clicks >= 4) {
       document.getElementById("finalBtn").style.display = "inline-block";
     }
-  }
-
-  function playSong() {
-    alert("happy birthday to youuuu ⚡🎶 (imagine me singing badly)");
   }
 </script>
 
