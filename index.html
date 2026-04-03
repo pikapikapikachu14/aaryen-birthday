@@ -359,7 +359,7 @@ softer
 <button id="mbtn" onclick="APP.toggleMusic()">♪</button>
 
 <!-- AUDIO -->
-<audio id="aud" loop preload="auto">
+<audio id="aud" loop autoplay muted playsinline>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -491,10 +491,12 @@ function boot() {
 
   function startMusic() {
   if (musicOn) return;
+  audEl.muted = false;
+
   audEl.play().then(function () {
     musicOn = true;
     mbtnEl.classList.add('playing');
-    audEl.volume = 0.6;
+    fadeVol(0.42, 2200);
   }).catch(function () { });
 }
 
