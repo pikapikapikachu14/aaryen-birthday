@@ -360,7 +360,7 @@ softer
 
 <!-- AUDIO -->
 <audio id="aud" loop preload="auto">
-  <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_5f9f4c06fa.mp3" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -678,12 +678,19 @@ function boot() {
   renderer.toneMapping        = T.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
 
-  window.addEventListener('resize', function () {
-    W = window.innerWidth; H = window.innerHeight;
-    renderer.setSize(W, H);
-    camera.aspect = W / H;
-    camera.updateProjectionMatrix();
-  });
+  document.addEventListener("click", function initAudio() {
+  const a = document.getElementById("aud");
+  a.play().catch(() => {});
+  document.removeEventListener("click", initAudio);
+});
+
+window.addEventListener('resize', function () {
+  W = window.innerWidth; 
+  H = window.innerHeight;
+  renderer.setSize(W, H);
+  camera.aspect = W / H;
+  camera.updateProjectionMatrix();
+});
 
   /* ── Scene & camera ──────────────────────────────────────────────────── */
   var world = new T.Scene();
