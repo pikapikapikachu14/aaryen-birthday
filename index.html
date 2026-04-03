@@ -479,8 +479,6 @@ function boot() {
   attachCursorHover();
 
   /* ── Music ──────────────────────────────────────────────────────────── */
-  audEl.volume = 0.6;
-
   function fadeVol(target, ms) {
     var origin = audEl.volume;
     var steps  = 40;
@@ -680,6 +678,7 @@ function boot() {
 
   document.addEventListener("click", function initAudio() {
   const a = document.getElementById("aud");
+  a.volume = 0.5;
   a.play().catch(() => {});
   document.removeEventListener("click", initAudio);
 });
